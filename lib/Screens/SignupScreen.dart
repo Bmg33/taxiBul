@@ -1,4 +1,4 @@
-// ignore_for_file: file_names, prefer_const_constructors, unnecessary_new
+// ignore_for_file: file_names, prefer_const_constructors, unnecessary_new, use_key_in_widget_constructors, prefer_final_fields
 
 import '../AllWidgets/progressDialog.dart';
 import '../Screens/homescreen.dart';
@@ -70,7 +70,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           hintText: "NAME",
                           hintStyle: TextStyle(
                             color: Colors.grey,
-                            fontFamily: "BreeSerif",
+                            fontFamily: "Brand Bold",
                             fontSize: 20,
                           ),
                         ),
@@ -89,7 +89,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           hintText: "surname",
                           hintStyle: TextStyle(
                             color: Colors.grey,
-                            fontFamily: "BreeSerif",
+                            fontFamily: "Brand Bold",
                             fontSize: 20,
                           ),
                         ),
@@ -127,7 +127,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           hintText: "Email",
                           hintStyle: TextStyle(
                             color: Colors.grey,
-                            fontFamily: "BreeSerif",
+                            fontFamily: "Brand Bold",
                             fontSize: 20,
                           ),
                         ),
@@ -165,7 +165,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           hintText: "confirme pasword",
                           hintStyle: TextStyle(
                             color: Colors.grey,
-                            fontFamily: "BreeSerif",
+                            fontFamily: "Brand Bold",
                             fontSize: 20,
                           ),
                         ),
@@ -186,7 +186,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               "Login",
                               style: TextStyle(
                                 color: Colors.white,
-                                fontFamily: "BreeSerif",
+                                fontFamily: "Brand Bold",
                                 fontSize: 18,
                               ),
                             ),

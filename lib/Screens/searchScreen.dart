@@ -1,7 +1,6 @@
-// ignore_for_file: avoid_print, file_names, prefer_const_constructors, prefer_if_null_operators, prefer_const_literals_to_create_immutables, prefer_is_empty
+// ignore_for_file: avoid_print, avoid_unnecessary_containers, file_names, prefer_const_constructors, prefer_const_constructors_in_immutables, prefer_is_empty, prefer_const_literals_to_create_immutables, prefer_if_null_operators, use_key_in_widget_constructors
 
-import 'package:taxsibul/AllWidgets/divider.dart';
-
+import '../AllWidgets/divider.dart';
 import '../AllWidgets/progressDialog.dart';
 import '../Assistants/requestAssistant.dart';
 import '../DataHandler/appData.dart';
@@ -25,7 +24,7 @@ class _SearchScreenState extends State<SearchScreen> {
   List<PlacePredictions> placePredectionList = [];
   @override
   Widget build(BuildContext context) {
-    final String placeAdress =
+    String placeAdress =
         Provider.of<AppData>(context).pickUpLocation.placeName == null
             ? ""
             : Provider.of<AppData>(context).pickUpLocation.placeName;
@@ -77,7 +76,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     ),
                     SizedBox(height: 5.0),
                     Stack(
-                      children: const [
+                      children: [
                         Center(
                           child: Text(
                             "where is your destination ",
@@ -92,7 +91,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     SizedBox(height: 16.0),
                     Row(
                       children: [
-                        Image.asset("images/desticon.png",
+                        Image.asset("images/pickicon.png",
                             height: 16.0, width: 16.0),
                         SizedBox(width: 18.0),
                         Expanded(
@@ -198,7 +197,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
 class PredectionsTails extends StatelessWidget {
   final PlacePredictions placePredictions;
-  const PredectionsTails({Key key, this.placePredictions}) : super(key: key);
+  PredectionsTails({Key key, this.placePredictions}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
