@@ -28,12 +28,12 @@ class SignUpScreen extends StatelessWidget {
           child: Column(
             children: [
               SizedBox(
-                height: 40.0,
+                height: 120.0,
               ),
               Image(
                 image: AssetImage('images/logo.png'),
-                height: 250.0,
-                width: 250.0,
+                height: 150.0,
+                width: 150.0,
                 alignment: Alignment.center,
               ),
               SizedBox(height: 1.0),

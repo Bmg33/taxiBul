@@ -90,4 +90,10 @@ class AssistantMethods {
       }
     });
   }
+
+  static double creatRandomNumber(int number) {
+    var random = Random();
+    int randomNum = random.nextInt(number);
+    return randomNum.toDouble();
+  }
 }

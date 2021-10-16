@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:driverapp/Notifications/pushNotificationSirvce.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -49,7 +50,6 @@ class _HomeTabPageState extends State<HomeTabPage> {
   bool changecolor = false;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
     getCurrentDriverInfo();
@@ -223,15 +223,15 @@ class _HomeTabPageState extends State<HomeTabPage> {
         driversInformation = Drivers.fromSnapShot(dataSnapshot);
       }
     });
-    // PushNtificationService pushntificationService = PushNtificationService();
-    // pushntificationService.initilaize(context);
-    // pushntificationService.getToken();
-    // setState(() {
-    //   if (Provider.of<AppData>(context, listen: false).tripHestoryDetailsList !=
-    //       null) {
-    //     Provider.of<AppData>(context, listen: false).clearHestory();
-    //   }
-    // });
+    PushNtificationService pushntificationService = PushNtificationService();
+    pushntificationService.initilaize(context);
+    pushntificationService.getToken();
+    setState(() {
+      if (Provider.of<AppData>(context, listen: false).tripHestoryDetailsList !=
+          null) {
+        Provider.of<AppData>(context, listen: false).clearHestory();
+      }
+    });
 
     // AsisstentMethods.retrieveHistoryInfo(context);
     // getRatings();

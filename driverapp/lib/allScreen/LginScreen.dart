@@ -28,13 +28,13 @@ class LoginScreen extends StatelessWidget {
               ),
               Image(
                 image: AssetImage('images/logo.png'),
-                height: 250.0,
-                width: 250.0,
+                height: 150.0,
+                width: 150.0,
                 alignment: Alignment.center,
               ),
               SizedBox(height: 1.0),
               Text(
-                'Welcome to TaxiBul',
+                'Driver ',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 18.0,
