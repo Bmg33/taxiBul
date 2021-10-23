@@ -232,10 +232,6 @@ class _HomeTabPageState extends State<HomeTabPage> {
         Provider.of<AppData>(context, listen: false).clearHestory();
       }
     });
-
-    // AsisstentMethods.retrieveHistoryInfo(context);
-    // getRatings();
-    //getRideType();
   }
 
   getRatings() {
