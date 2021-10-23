@@ -148,7 +148,7 @@ class NotificationDialog extends StatelessWidget {
         Navigator.push(
             context,
             MaterialPageRoute(
-              // builder: (context) => NewRideScreen(rideDetails: rideDetails),
+              builder: (context) => NewRideScreen(rideDetails: rideDetails),
             ));
       } else if (theRideId == "cancelled") {
         displayToastMsg("the rider has cancelled exists", context);

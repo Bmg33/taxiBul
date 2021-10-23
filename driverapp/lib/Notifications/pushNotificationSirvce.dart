@@ -1,21 +1,18 @@
-// import 'package:assets_audio_player/assets_audio_player.dart';
-//  import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:driverapp/Notifications/notificationDialog.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../Models/RideDetails.dart';
+import '../Notifications/notificationDialog.dart';
 import '../configMaps.dart';
 import '../main.dart';
 import 'dart:io' show Platform;
 
 class PushNtificationService {
   final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
-  // var newId;
+  var newId;
 
   Future initilaize(context) async {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      //when driver opens the app
       retrieveRideRequistInfo(getRideRequistId(message.data), context);
     });
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
@@ -37,6 +34,8 @@ class PushNtificationService {
 
   String getRideRequistId(Map<String, dynamic> message) {
     String rideRequistId;
+    print(
+        "this is test for ride requist id ++++++++++++++++: ${message['ride_requist_id']}");
     if (Platform.isAndroid) {
       rideRequistId = message['ride_requist_id'];
     } else {

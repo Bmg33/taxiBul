@@ -96,4 +96,38 @@ class AssistantMethods {
     int randomNum = random.nextInt(number);
     return randomNum.toDouble();
   }
+
+  static sendNotificationToDriver(
+      String token, context, String ride_requist_id) async {
+    var destination =
+        Provider.of<AppData>(context, listen: false).dropOffLocation;
+    Map<String, String> headerMap = {
+      'Content-Type': 'application/json',
+      'Authorization': serverToken,
+    };
+    Map notificationMap = {
+      'body': 'DropOff Addess , ${destination.placeName}',
+      'title': 'New Ride Request'
+    };
+
+    Map dataMap = {
+      'click_action': 'FLUTTER_NOTIFICATION_CLICK',
+      'id': '1',
+      'status': 'done',
+      'ride_requist_id': ride_requist_id,
+    };
+
+    Map sendNotificationMap = {
+      "notification": notificationMap,
+      "data": dataMap,
+      "priority": "high",
+      "to": token,
+    };
+
+    var res = await http.post(
+      Uri.parse("https://fcm.googleapis.com/fcm/send"),
+      headers: headerMap,
+      body: jsonEncode(sendNotificationMap),
+    );
+  }
 }

@@ -1,11 +1,17 @@
-// ignore_for_file: deprecated_member_use, prefer_const_literals_to_create_immutables, prefer_const_constructors, void_checks, use_key_in_widget_constructors, prefer_final_fields, unnecessary_new, avoid_print, prefer_collection_literals
+// ignore_for_file: deprecated_member_use, unnecessary_new, prefer_final_fields, prefer_const_constructors, prefer_const_literals_to_create_immutables, void_checks
 
 import 'dart:async';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter_geofire/flutter_geofire.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:taxsibul/AllWidgets/CollectFareDialog.dart';
+import 'package:taxsibul/AllWidgets/noDriverAvailableDialog.dart';
 import 'package:taxsibul/Assistants/geofireAssestent.dart';
+
 import 'package:taxsibul/Models/nearByAvailbleDrivers.dart';
+import 'package:taxsibul/Screens/ratingScreen.dart';
+import 'package:taxsibul/main.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../AllWidgets/divider.dart';
 import '../AllWidgets/progressDialog.dart';
 import '../Assistants/assistantMethods.dart';
@@ -38,12 +44,20 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   @override
   initState() {
     super.initState();
+    // Add listeners to this class
     AssistantMethods.getallUserInfo();
   }
 
+  BitmapDescriptor nearByIcon;
+  String state = "normal";
+
   DatabaseReference rideRequistRef;
   String uName = "";
-  BitmapDescriptor nearByIcon;
+
+  List<NearByAvailableDraivers> availableDrievrs;
+
+  StreamSubscription<Event> rideStreamSubscription;
+
   GlobalKey<ScaffoldState> scafuldKey = new GlobalKey<ScaffoldState>();
   List<LatLng> pLineCoerordinates = [];
   Set<Polyline> polylineSet = {};
@@ -51,6 +65,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   Set<Circle> circlesSet = {};
   Completer<GoogleMapController> _controllergoogleMap = Completer();
   GoogleMapController newGooglemapController;
+  bool isTheAnyImge = false;
+  bool isrequestintpositionDetails = false;
   double bottumpaddingofMap = 0;
   static final CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(41.015137, 28.979530), // istanbul
@@ -76,6 +92,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     String address =
         await AssistantMethods.searchCoordinateAddress(position, context);
     print("this is your Address :: " + address);
+
+    uName = "${usersCurrentInfo.name} ${usersCurrentInfo.surname}";
+
     initGeoFireListener();
   }
 
@@ -91,6 +110,11 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       circlesSet.clear();
       pLineCoerordinates.clear();
 
+      statusRide = "";
+      driverName = "";
+      driverPhone = "";
+      carDetailsDriver = "";
+      rideStatus = "on the way";
       driverDetailsContainerHeight = 0.0;
     });
 
@@ -108,13 +132,16 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         .animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
 
     String address = await AssistantMethods.searchCoordinateAddress(p, context);
-    // initGeoFireListener();
+    initGeoFireListener();
 
     uName = usersCurrentInfo.name;
   }
 
   void cancleRequist() {
     rideRequistRef.remove();
+    setState(() {
+      state = "normal";
+    });
   }
 
   double searchContainerHeight = 300.0;
@@ -140,6 +167,15 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       rideDetailsContainerHeight = 0;
       bottumpaddingofMap = 230.0;
       drwoerOpen = true;
+    });
+  }
+
+  void displayDriverDetailsContainer() {
+    setState(() {
+      requistRideDetailsContainerHeight = 250.0;
+      rideDetailsContainerHeight = 0;
+      bottumpaddingofMap = 230.0;
+      driverDetailsContainerHeight = 310.0;
     });
   }
 
@@ -230,9 +266,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 ),
               ),
               InkWell(
-                onTap: () {
-                  // Navigator.pushNamed(context, AboutScreen.screenId);
-                },
+                onTap: () {},
                 child: ListTile(
                   leading: Icon(
                     Icons.info,
@@ -480,7 +514,17 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                     children: [
                       SizedBox(height: 35),
                       GestureDetector(
-                        onTap: () {},
+                        onTap: () {
+                          // displayToastMsg("يتم البحث عن ديليفري جديد", context);
+                          setState(() {
+                            state = "requisting";
+                            carRideType = "bike";
+                          });
+                          displayRequistHeightContainer();
+                          availableDrievrs =
+                              GeoFireAssistent.nearbyAvailableDraiversList;
+                          searchNearistDriver();
+                        },
                         child: Container(
                           width: double.infinity,
                           color: MyColors.asfar_color,
@@ -532,7 +576,14 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                       SizedBox(height: 10.0),
                       GestureDetector(
                         onTap: () {
+                          setState(() {
+                            state = "requisting";
+                            carRideType = "Taxi";
+                          });
                           displayRequistHeightContainer();
+                          availableDrievrs =
+                              GeoFireAssistent.nearbyAvailableDraiversList;
+                          searchNearistDriver();
                         },
                         child: Container(
                           width: double.infinity,
@@ -583,7 +634,18 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                       Divider(height: 2.0, thickness: 2.0),
                       SizedBox(height: 10.0),
                       GestureDetector(
-                        onTap: () {},
+                        onTap: () {
+                          // displayToastMsg(
+                          //     "trying to fined a new Driver ! ", context);
+                          setState(() {
+                            state = "requisting";
+                            carRideType = "private car";
+                          });
+                          displayRequistHeightContainer();
+                          availableDrievrs =
+                              GeoFireAssistent.nearbyAvailableDraiversList;
+                          searchNearistDriver();
+                        },
                         child: Container(
                           width: double.infinity,
                           color: MyColors.asfar_color,
@@ -758,8 +820,21 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(height: 6.0),
+                    Text(
+                      rideStatus,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 20.0, color: Colors.white),
+                    ),
                     SizedBox(height: 22.0),
                     Divider(),
+                    Text(
+                      carDetailsDriver,
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                    Text(
+                      driverName,
+                      style: TextStyle(fontSize: 20.0, color: Colors.white),
+                    ),
                     SizedBox(height: 22.0),
                     Divider(),
                     SizedBox(height: 22.0),
@@ -770,7 +845,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                           padding: EdgeInsets.symmetric(horizontal: 20.0),
                           // ignore: deprecated_member_use
                           child: RaisedButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              launch(("tel://$driverPhone"));
+                            },
                             color: MyColors.asfar_color,
                             child: Padding(
                               padding: EdgeInsets.all(17.0),
@@ -918,46 +995,11 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       strokeColor: Colors.deepPurple,
       circleId: CircleId("DropOffId"),
     );
+
     setState(() {
       circlesSet.add(pickUpCircle);
       circlesSet.add(dropOffCircle);
     });
-  }
-
-  void saveRideRequist() {
-    rideRequistRef =
-        FirebaseDatabase.instance.reference().child("RideRequests").push();
-    var pickup = Provider.of<AppData>(context, listen: false).pickUpLocation;
-    var dropOff = Provider.of<AppData>(context, listen: false).dropOffLocation;
-
-    Map pickUpLocMap = {
-      "latitude": pickup.latitude.toString(),
-      "longitude": pickup.longitude.toString(),
-    };
-    Map dropOffLocMap = {
-      "latitude": dropOff.latitude.toString(),
-      "longitude": dropOff.longitude.toString(),
-    };
-    Map rideInfoMap = {
-      "driver_id": "waiting",
-      "payment_method": "cash",
-      "pickup": pickUpLocMap,
-      "dropoff": dropOffLocMap,
-      "created_at": DateTime.now().toString(),
-      "rider_name": usersCurrentInfo.name,
-      "rider_phone": usersCurrentInfo.phone,
-      "pickup_address": pickup.placeName,
-      "droppOff_address": dropOff.placeName,
-    };
-    rideRequistRef.set(rideInfoMap);
-
-    void displayToastMsg(String msg, BuildContext cxt) {
-      Fluttertoast.showToast(msg: msg, textColor: Colors.green);
-    }
-  }
-
-  void goToHisstor(BuildContext context) {
-    Navigator.pushNamed(context, MyHistory.screenId);
   }
 
   void initGeoFireListener() {
@@ -1051,5 +1093,231 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         nearByIcon = value;
       });
     }
+  }
+
+  void noDriversFond() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => NoAvailableDriverDialog(),
+    );
+  }
+
+  void searchNearistDriver() {
+    if (availableDrievrs.length == 0) {
+      cancleRequist();
+      resetApp();
+      noDriversFond();
+      return;
+    }
+    var driver = availableDrievrs[0];
+    notifyDriver(driver);
+    availableDrievrs.removeAt(0);
+  }
+
+  void saveRideRequist() {
+    rideRequistRef =
+        FirebaseDatabase.instance.reference().child("RideRequests").push();
+    var pickup = Provider.of<AppData>(context, listen: false).pickUpLocation;
+    var dropOff = Provider.of<AppData>(context, listen: false).dropOffLocation;
+
+    Map pickUpLocMap = {
+      "latitude": pickup.latitude.toString(),
+      "longitude": pickup.longitude.toString(),
+    };
+    Map dropOffLocMap = {
+      "latitude": dropOff.latitude.toString(),
+      "longitude": dropOff.longitude.toString(),
+    };
+    Map rideInfoMap = {
+      "driver_id": "waiting",
+      "payment_method": "cash",
+      "pickup": pickUpLocMap,
+      "dropoff": dropOffLocMap,
+      "created_at": DateTime.now().toString(),
+      "rider_name": usersCurrentInfo.name,
+      "rider_phone": usersCurrentInfo.phone,
+      "pickup_address": pickup.placeName,
+      "droppOff_address": dropOff.placeName,
+      "ride_type": carRideType,
+    };
+    rideRequistRef.set(rideInfoMap);
+
+    rideStreamSubscription = rideRequistRef.onValue.listen((event) async {
+      if (event.snapshot.value == null) {
+        return;
+      }
+
+      if (event.snapshot.value['car_details'] != null) {
+        setState(() {
+          carDetailsDriver = event.snapshot.value['car_details'].toString();
+        });
+      }
+      if (event.snapshot.value['driver_name'] != null) {
+        setState(() {
+          carDetailsDriver = event.snapshot.value['driver_name'].toString();
+        });
+      }
+      if (event.snapshot.value['driver_phone'] != null) {
+        setState(() {
+          driverPhone = event.snapshot.value['driver_phone'].toString();
+        });
+      }
+
+      if (event.snapshot.value['driver_location'] != null) {
+        //longitude
+        double driverLat = double.parse(
+            event.snapshot.value['driver_location']['latitude'].toString());
+
+        double driverLng = double.parse(
+            event.snapshot.value['driver_location']['longitude'].toString());
+
+        LatLng driverCurrentLocation = LatLng(driverLat, driverLng);
+
+        if (statusRide == "accepted") {
+          updaterideTimePickUpLoc(driverCurrentLocation);
+        } else if (statusRide == "onride") {
+          updaterideTimedropOffLoc(driverCurrentLocation);
+        } else if (statusRide == "arrived") {
+          setState(() {
+            rideStatus = "Driver has arraived ";
+          });
+        }
+      }
+      if (event.snapshot.value['status'] != null) {
+        statusRide = event.snapshot.value['status'].toString();
+      }
+      if (statusRide == "accepted") {
+        displayDriverDetailsContainer();
+        Geofire.stopListener();
+        removeGeoFileMarkers();
+      }
+      if (statusRide == "ended") {
+        if (event.snapshot.value["fares"] != null) {
+          int fare = int.parse(event.snapshot.value["fares"].toString());
+          var res = await showDialog(
+            context: context,
+            builder: (context) => CollectFareDialog(
+              paymentMethod: "cash",
+              fareAmount: fare,
+            ),
+          );
+          String driverId = "";
+          if (res == "close") {
+            if (event.snapshot.value["driver_id"] != null) {
+              driverId = event.snapshot.value["driver_id"].toString();
+            }
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => RatingScrean(driverId: driverId),
+                ));
+
+            rideRequistRef.onDisconnect();
+            rideRequistRef = null;
+            rideStreamSubscription.cancel();
+            rideStreamSubscription = null;
+            resetApp();
+          }
+        }
+      }
+    });
+  }
+
+  void notifyDriver(NearByAvailableDraivers driver) {
+    driversRef.child(driver.key).child('newRide').set(rideRequistRef.key);
+    driversRef
+        .child(driver.key)
+        .child('token')
+        .once()
+        .then((DataSnapshot snapshot) {
+      if (snapshot.value != null) {
+        String token = snapshot.value.toString();
+        AssistantMethods.sendNotificationToDriver(
+            token, context, rideRequistRef.key);
+      } else {
+        return;
+      }
+      const oneSecondPassed = Duration(seconds: 1);
+
+      var timer = Timer.periodic(oneSecondPassed, (timer) {
+        driverRequistTimeOnt = driverRequistTimeOnt - 1;
+
+        if (state != "requisting") {
+          driversRef.child(driver.key).child('newRide').set("cancelled");
+          driversRef.child(driver.key).child('newRide').onDisconnect();
+          driverRequistTimeOnt = 40;
+          timer.cancel();
+
+          searchNearistDriver();
+        }
+        driversRef.child(driver.key).child("newRide").onValue.listen((event) {
+          if (event.snapshot.value.toString() == "accepted") {
+            driversRef.child(driver.key).child('newRide').onDisconnect();
+            driverRequistTimeOnt = 40;
+            timer.cancel();
+          }
+        });
+
+        if (driverRequistTimeOnt == 0) {
+          driversRef.child(driver.key).child('newRide').set("timeout");
+          driversRef.child(driver.key).child('newRide').onDisconnect();
+          driverRequistTimeOnt = 40;
+          timer.cancel();
+
+          searchNearistDriver();
+        }
+      });
+    });
+  }
+
+  void displayToastMsg(String msg, BuildContext cxt) {
+    Fluttertoast.showToast(msg: msg, textColor: Colors.green);
+  }
+
+  void updaterideTimedropOffLoc(LatLng driverCurrentLocation) async {
+    if (isrequestintpositionDetails == false) {
+      isrequestintpositionDetails = true;
+      var dropOff =
+          Provider.of<AppData>(context, listen: false).dropOffLocation;
+      var dropOffUserLatLng = LatLng(dropOff.latitude, dropOff.longitude);
+      var detailss = await AssistantMethods.obtainDirectionDetails(
+          driverCurrentLocation, dropOffUserLatLng);
+      if (detailss == null) {
+        return;
+      }
+      setState(() {
+        rideStatus = "Going to Destination -" + detailss.distanceText;
+      });
+      isrequestintpositionDetails = false;
+    }
+  }
+
+  void updaterideTimePickUpLoc(LatLng driverCurrentLocation) async {
+    if (isrequestintpositionDetails == false) {
+      isrequestintpositionDetails = true;
+      var positionUserLatLng =
+          LatLng(currentPosition.latitude, currentPosition.longitude);
+      var detailss = await AssistantMethods.obtainDirectionDetails(
+          driverCurrentLocation, positionUserLatLng);
+      if (detailss == null) {
+        return;
+      }
+      setState(() {
+        rideStatus = "on the way -" + detailss.distanceText;
+      });
+      isrequestintpositionDetails = false;
+    }
+  }
+
+  void goToHisstor(BuildContext context) {
+    Navigator.pushNamed(context, MyHistory.screenId);
+  }
+
+  void removeGeoFileMarkers() {
+    setState(() {
+      markersSet
+          .removeWhere((element) => element.markerId.value.contains("driver"));
+    });
   }
 }
