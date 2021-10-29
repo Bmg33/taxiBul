@@ -515,6 +515,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                       SizedBox(height: 35),
                       GestureDetector(
                         onTap: () {
+                          displayToastMsg(
+                              "trying to fined a new Driver ! ", context);
                           // displayToastMsg("يتم البحث عن ديليفري جديد", context);
                           setState(() {
                             state = "requisting";
@@ -534,7 +536,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 //
-                                Image.asset("images/taxi.png",
+                                Image.asset("images/bike.png",
                                     height: 70.0, width: 90.0),
                                 SizedBox(width: 16.0),
                                 Column(
@@ -560,7 +562,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                 ),
                                 Text(
                                   ((tripDiractionDetails != null)
-                                      ? '${(AssistantMethods.calculateFares(tripDiractionDetails))} TL'
+                                      ? '${((AssistantMethods.calculateFares(tripDiractionDetails)) / 2)} TL'
                                       : ''),
                                   style: TextStyle(
                                     fontSize: 18.0,
@@ -576,6 +578,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                       SizedBox(height: 10.0),
                       GestureDetector(
                         onTap: () {
+                          displayToastMsg(
+                              "trying to fined a new Driver ! ", context);
                           setState(() {
                             state = "requisting";
                             carRideType = "Taxi";
@@ -593,7 +597,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                             child: Row(
                               children: [
                                 //
-                                Image.asset("images/taxi.png",
+                                Image.asset("images/Taxigo.png",
                                     height: 70.0, width: 90.0),
                                 SizedBox(width: 16.0),
                                 Column(
@@ -635,8 +639,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                       SizedBox(height: 10.0),
                       GestureDetector(
                         onTap: () {
-                          // displayToastMsg(
-                          //     "trying to fined a new Driver ! ", context);
+                          displayToastMsg(
+                              "trying to fined a new Driver ! ", context);
                           setState(() {
                             state = "requisting";
                             carRideType = "private car";
@@ -654,7 +658,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                             child: Row(
                               children: [
                                 //
-                                Image.asset("images/taxi.png",
+                                Image.asset("images/TaxiX.png",
                                     height: 70.0, width: 90.0),
                                 SizedBox(width: 16.0),
                                 Column(
@@ -1113,6 +1117,26 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     var driver = availableDrievrs[0];
     notifyDriver(driver);
     availableDrievrs.removeAt(0);
+    driversRef
+        .child(driver.key)
+        .child("car_details")
+        .child("type")
+        .once()
+        .then((snap) async {
+      if (await snap.value != null) {
+        String car_type = snap.value.toString();
+        if (car_type == carRideType) {
+          notifyDriver(driver);
+          availableDrievrs.removeAt(0);
+        } else {
+          displayToastMsg("there is no available driver now ! ", context);
+        }
+      } else {
+        displayToastMsg(
+            "there is no availble driver nearby now please try again later ",
+            context);
+      }
+    });
   }
 
   void saveRideRequist() {
