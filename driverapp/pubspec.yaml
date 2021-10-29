@@ -76,6 +76,8 @@ flutter:
     - images/taxi.png
     - images/user_icon.png
     - sounds/alert.mp3
+    - images/taxigo.png
+    - images/taxix.png
    
 
   # An image asset can refer to one or more resolution-specific "variants", see

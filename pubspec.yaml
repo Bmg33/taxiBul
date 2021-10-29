@@ -87,6 +87,9 @@ flutter:
     - images/redmarker.png
     - images/taxi.png
     - images/user_icon.png
+    - images/bike.png
+    - images/taxigo.png
+    - images/taxix.png
     
 
   # An image asset can refer to one or more resolution-specific "variants", see

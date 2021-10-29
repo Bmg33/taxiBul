@@ -1,4 +1,4 @@
-// ignore_for_file: file_names, prefer_const_constructors, deprecated_member_use
+// ignore_for_file: file_names, prefer_const_constructors, use_key_in_widget_constructors
 
 import 'package:flutter/material.dart';
 import 'package:taxsibul/myColors/MyColors.dart';
@@ -19,13 +19,14 @@ class NoAvailableDriverDialog extends StatelessWidget {
         ),
         child: Padding(
           padding: EdgeInsets.all(16.0),
-          child: SingleChildScrollView(
+          child: Container(
+            height: 130,
             child: Column(
               children: [
                 SizedBox(height: 10.0),
                 Expanded(
                   child: Text(
-                    "there is no availble driver now .",
+                    "there is no availble driver now.",
                     style: TextStyle(
                       fontSize: 20.0,
                     ),
@@ -34,6 +35,7 @@ class NoAvailableDriverDialog extends StatelessWidget {
                 SizedBox(height: 10.0),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 60.0),
+                  // ignore: deprecated_member_use
                   child: RaisedButton(
                     color: MyColors.asfar_color,
                     child: Padding(

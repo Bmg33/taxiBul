@@ -110,7 +110,9 @@ class CarInfoScreen extends StatelessWidget {
                             hint: Text(
                               "Choose: Motorcycle - Taxi - Personal Car",
                               style: TextStyle(
-                                  color: Colors.white60, fontSize: 16.0),
+                                color: Colors.white,
+                                fontSize: 16.0,
+                              ),
                             ),
                             value: selectedCarType,
                             items: carTypeLIST.map((cartype) {
