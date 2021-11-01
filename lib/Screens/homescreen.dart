@@ -597,7 +597,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                             child: Row(
                               children: [
                                 //
-                                Image.asset("images/Taxigo.png",
+                                Image.asset("images/taxigo.png",
                                     height: 70.0, width: 90.0),
                                 SizedBox(width: 16.0),
                                 Column(
@@ -658,7 +658,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                             child: Row(
                               children: [
                                 //
-                                Image.asset("images/TaxiX.png",
+                                Image.asset("images/taxix.png",
                                     height: 70.0, width: 90.0),
                                 SizedBox(width: 16.0),
                                 Column(
