@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print, file_names, prefer_const_constructors
+// ignore_for_file: avoid_print, file_names, prefer_const_constructors, unnecessary_new
 
 import '../AllWidgets/progressDialog.dart';
 import '../Screens/homescreen.dart';

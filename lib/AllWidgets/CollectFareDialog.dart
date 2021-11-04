@@ -49,8 +49,6 @@ class CollectFareDialog extends StatelessWidget {
               child: RaisedButton(
                 onPressed: () async {
                   Navigator.pop(context, "close");
-
-                  // AssistantMethods.enableHomeTabLiveLocationUpdate();
                 },
                 color: MyColors.asfar_color,
                 child: Padding(
