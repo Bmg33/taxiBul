@@ -9,6 +9,7 @@ import 'package:taxsibul/AllWidgets/noDriverAvailableDialog.dart';
 import 'package:taxsibul/Assistants/geofireAssestent.dart';
 
 import 'package:taxsibul/Models/nearByAvailbleDrivers.dart';
+import 'package:taxsibul/Screens/ProfileTabPage.dart';
 import 'package:taxsibul/Screens/about.dart';
 import 'package:taxsibul/Screens/ratingScreen.dart';
 import 'package:taxsibul/main.dart';
@@ -20,7 +21,6 @@ import '../DataHandler/appData.dart';
 import '../Models/directionDetails.dart';
 import '../Screens/loginScreen.dart';
 import '../Screens/myHistory.dart';
-import '../Screens/profileScreen.dart';
 import '../Screens/searchScreen.dart';
 import '../configmaps.dart';
 import '../myColors/MyColors.dart';
@@ -221,6 +221,18 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                   color: MyColors.asfar_color),
                             ),
                             SizedBox(height: 16.0),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            ProfileTabPage()));
+                              },
+                              child: Text(
+                                "Visit Profile",
+                              ),
+                            )
                           ],
                         ),
                       ),
@@ -252,14 +264,17 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               ),
               GestureDetector(
                 onTap: () {
-                  Navigator.pushNamed(context, ProfileScreen.screenId);
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ProfileTabPage()));
                 },
                 child: ListTile(
                   leading: Icon(
                     Icons.person,
                     color: MyColors.asfar_color,
                   ),
-                  title: Text("profile Screen",
+                  title: Text("Profile",
                       style: TextStyle(
                         fontSize: 15.0,
                         color: Colors.white,

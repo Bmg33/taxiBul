@@ -1,11 +1,11 @@
 // ignore_for_file: unused_import
 
 import 'package:taxsibul/DataHandler/appData.dart';
+import 'package:taxsibul/Screens/ProfileTabPage.dart';
 import 'package:taxsibul/Screens/about.dart';
 import 'package:taxsibul/Screens/homescreen.dart';
 import 'package:taxsibul/Screens/loginScreen.dart';
 import 'package:taxsibul/Screens/myHistory.dart';
-import 'package:taxsibul/Screens/profileScreen.dart';
 import 'package:taxsibul/myColors/MyColors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -45,7 +45,7 @@ class MyApp extends StatelessWidget {
         routes: {
           HomeScreen.screenId: (context) => HomeScreen(),
           MyHistory.screenId: (context) => MyHistory(),
-          ProfileScreen.screenId: (context) => ProfileScreen(),
+          ProfileTabPage.screenId: (context) => ProfileTabPage(),
           AboutScereen.screenid: (context) => AboutScereen(),
           LoginScreen.screenid: (context) => LoginScreen(),
         },
