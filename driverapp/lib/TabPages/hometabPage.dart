@@ -226,6 +226,7 @@ class _HomeTabPageState extends State<HomeTabPage> {
     PushNtificationService pushntificationService = PushNtificationService();
     pushntificationService.initilaize(context);
     pushntificationService.getToken();
+    getRatings();
     setState(() {
       if (Provider.of<AppData>(context, listen: false).tripHestoryDetailsList !=
           null) {

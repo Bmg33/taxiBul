@@ -45,11 +45,11 @@ class AsisstentMethods {
     double distancTravledFare = (directionDetails.distanceValue / 1000) * 2.50;
     if (rideType != "") {
       if (rideType == "taxi") {
-        double result = distancTravledFare * 2.0;
+        double result = distancTravledFare;
         return result.truncate();
       }
       if (rideType == "private car") {
-        double result = distancTravledFare;
+        double result = distancTravledFare * 2.0;
         return result.truncate();
       }
       if (rideType == "bike") {
@@ -74,6 +74,38 @@ class AsisstentMethods {
   }
 
   static void retrieveHistoryInfo(BuildContext context) {
+    //retrive the earnings raitings ..
+    dirversRef
+        .child(currentfirebaseuser.uid)
+        .child("ratings")
+        .once()
+        .then((DataSnapshot snapshot) {
+      if (snapshot.value != null) {
+        double ratings = double.parse(snapshot.value.toString());
+        starCounter = ratings;
+        if (starCounter <= 1) {
+          title = "very bad";
+          return;
+        }
+        if (starCounter <= 2) {
+          title = "bad";
+          return;
+        }
+        if (starCounter <= 3) {
+          title = "good";
+          return;
+        }
+        if (starCounter <= 4) {
+          title = "very good";
+          return;
+        }
+        if (starCounter <= 5) {
+          title = "excellent";
+          return;
+        }
+      }
+    });
+
     //retrive the earnings hestory ..
     dirversRef
         .child(currentfirebaseuser.uid)

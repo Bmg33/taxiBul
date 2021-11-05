@@ -9,6 +9,7 @@ import 'package:taxsibul/AllWidgets/noDriverAvailableDialog.dart';
 import 'package:taxsibul/Assistants/geofireAssestent.dart';
 
 import 'package:taxsibul/Models/nearByAvailbleDrivers.dart';
+import 'package:taxsibul/Screens/about.dart';
 import 'package:taxsibul/Screens/ratingScreen.dart';
 import 'package:taxsibul/main.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -265,8 +266,12 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                       )),
                 ),
               ),
-              InkWell(
-                onTap: () {},
+
+              GestureDetector(
+                onTap: () {
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, AboutScereen.screenid, (Route) => false);
+                },
                 child: ListTile(
                   leading: Icon(
                     Icons.info,

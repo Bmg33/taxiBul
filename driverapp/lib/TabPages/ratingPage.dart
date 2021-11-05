@@ -1,7 +1,7 @@
+import 'package:driverapp/configMaps.dart';
 import 'package:flutter/material.dart';
+import 'package:smooth_star_rating/smooth_star_rating.dart';
 import '../allwidgets/CustomColors.dart';
-
-import '../configMaps.dart';
 
 class RatingTabPage extends StatefulWidget {
   @override
@@ -23,15 +23,15 @@ class _RatingTabPageState extends State<RatingTabPage> {
                   fontWeight: FontWeight.bold,
                   color: Colors.white),
             ),
-            // SmoothStarRating(
-            //   borderColor: CostumColors.asfar_color,
-            //   isReadOnly: true,
-            //   rating: starCounter,
-            //   color: CostumColors.asfar_color,
-            //   allowHalfRating: true,
-            //   starCount: 5,
-            //   size: 45,
-            // ),
+            SmoothStarRating(
+              borderColor: CostumColors.asfar_color,
+              isReadOnly: true,
+              rating: starCounter,
+              color: CostumColors.asfar_color,
+              allowHalfRating: true,
+              starCount: 5,
+              size: 45,
+            ),
             SizedBox(height: 14.0),
             Text(
               title,
